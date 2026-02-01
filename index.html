@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>E-commerce Product Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    select {
+      padding: 6px;
+      margin-right: 10px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .product {
+      background: white;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .product h4 {
+      margin: 5px 0;
+    }
+
+    .product p {
+      margin: 3px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Product Listing</h2>
+
+<!-- Controls -->
+<select id="sortSelect">
+  <option value="">Sort By</option>
+  <option value="price-asc">Price: Low to High</option>
+  <option value="price-desc">Price: High to Low</option>
+  <option value="name-asc">Name: A to Z</option>
+  <option value="name-desc">Name: Z to A</option>
+  <option value="rating-asc">Rating: Low to High</option>
+  <option value="rating-desc">Rating: High to Low</option>
+</select>
+
+<select id="categoryFilter">
+  <option value="All">All Categories</option>
+  <option value="Electronics">Electronics</option>
+  <option value="Clothing">Clothing</option>
+  <option value="Books">Books</option>
+  <option value="Home">Home</option>
+</select>
+
+<!-- Product List -->
+<div class="products" id="productList"></div>
+
+<script>
+  const products = [
+    { name: "Laptop", price: 55000, rating: 4, category: "Electronics" },
+    { name: "Smartphone", price: 30000, rating: 5, category: "Electronics" },
+    { name: "Headphones", price: 2000, rating: 4, category: "Electronics" },
+    { name: "Smartwatch", price: 8000, rating: 3, category: "Electronics" },
+    { name: "Camera", price: 25000, rating: 5, category: "Electronics" },
+
+    { name: "T-Shirt", price: 500, rating: 4, category: "Clothing" },
+    { name: "Jeans", price: 1500, rating: 5, category: "Clothing" },
+    { name: "Jacket", price: 3000, rating: 4, category: "Clothing" },
+    { name: "Shoes", price: 2500, rating: 3, category: "Clothing" },
+    { name: "Cap", price: 300, rating: 4, category: "Clothing" },
+
+    { name: "Novel", price: 400, rating: 5, category: "Books" },
+    { name: "Textbook", price: 900, rating: 4, category: "Books" },
+    { name: "Comics", price: 250, rating: 3, category: "Books" },
+    { name: "Biography", price: 600, rating: 4, category: "Books" },
+    { name: "Magazine", price: 150, rating: 3, category: "Books" },
+
+    { name: "Chair", price: 2000, rating: 4, category: "Home" },
+    { name: "Table", price: 5000, rating: 5, category: "Home" },
+    { name: "Lamp", price: 1200, rating: 4, category: "Home" },
+    { name: "Curtains", price: 1800, rating: 3, category: "Home" },
+    { name: "Clock", price: 700, rating: 4, category: "Home" }
+  ];
+
+  let displayedProducts = [...products];
+
+  const productList = document.getElementById("productList");
+  const sortSelect = document.getElementById("sortSelect");
+  const categoryFilter = document.getElementById("categoryFilter");
+
+  function renderProducts(list) {
+    productList.innerHTML = "";
+    list.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <h4>${p.name}</h4>
+        <p>Price: ₹${p.price}</p>
+        <p>Rating: ${p.rating}</p>
+        <p>Category: ${p.category}</p>
+      `;
+      productList.appendChild(div);
+    });
+  }
+
+  sortSelect.addEventListener("change", () => {
+    const value = sortSelect.value;
+
+    if (value === "price-asc") displayedProducts.sort((a,b) => a.price - b.price);
+    if (value === "price-desc") displayedProducts.sort((a,b) => b.price - a.price);
+    if (value === "name-asc") displayedProducts.sort((a,b) => a.name.localeCompare(b.name));
+    if (value === "name-desc") displayedProducts.sort((a,b) => b.name.localeCompare(a.name));
+    if (value === "rating-asc") displayedProducts.sort((a,b) => a.rating - b.rating);
+    if (value === "rating-desc") displayedProducts.sort((a,b) => b.rating - a.rating);
+
+    renderProducts(displayedProducts);
+  });
+
+  categoryFilter.addEventListener("change", () => {
+    const category = categoryFilter.value;
+
+    displayedProducts = category === "All"
+      ? [...products]
+      : products.filter(p => p.category === category);
+
+    renderProducts(displayedProducts);
+  });
+
+  renderProducts(displayedProducts);
+</script>
+
+</body>
+</html>
